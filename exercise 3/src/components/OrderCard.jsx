@@ -1,18 +1,21 @@
 import React from "react";
 import { useState } from "react";
 
-export default function OrderCard({product,price,quantity}) {
+export default function OrderCard({ product, price, quantity, updateTotal }) {
   const [curq,setCur] = useState(quantity);
 
-  //handle add button
-  function onAdd(){
-    let cur = curq +1;
-    setCur(cur);
+  function onAdd() {
+    const newQuantity = curq + 1;
+    setCur(newQuantity);
+    updateTotal(product, newQuantity);
   }
-  //handle - button
-  function onMinus(){
-      let cur = curq - 1;
-      setCur(cur);
+
+  function onMinus() {
+    if (curq > 0) {
+      const newQuantity = curq - 1;
+      setCur(newQuantity);
+      updateTotal(product, newQuantity);
+    }
   }
 
   return (
@@ -23,7 +26,7 @@ export default function OrderCard({product,price,quantity}) {
       </div>
 
       <div className="order-quantity">
-        <div className= {(curq <= 0) ? "order-button disable" : "order-button"} onClick={onMinus}>-</div>
+        <div className= {`order-button ${curq === 0 ? "disable" : ""}`} onClick={onMinus}>-</div>
         <h4>{curq}</h4>
         <div className="order-button" onClick={onAdd}>+</div>
       </div>

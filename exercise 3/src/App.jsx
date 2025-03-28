@@ -22,8 +22,22 @@ const ORDERS = [
   },
 ];
 
-export default function App() {
-  const [orders, setOrders] = React.useState(ORDERS);
+  export default function App() {
+    const [orders, setOrders] = useState(ORDERS);
+    const [total, setTotal] = useState(() =>
+      ORDERS.reduce((sum, item) => sum + item.price * item.quantity, 0)
+    );
+    function updateTotal(product, newQuantity) {
+      const updatedOrders = orders.map((item) =>
+        item.product === product ? { ...item, quantity: newQuantity } : item
+      );
+      setOrders(updatedOrders);
+
+   // calculate total price
+   
+   const newTotal = updatedOrders.reduce((sum, item) => sum + item.price * item.quantity, 0);
+   setTotal(newTotal);
+    }
 
   return (
     <>
@@ -33,13 +47,18 @@ export default function App() {
 
       <div className="order-list">
         {orders.map((order) =>(
-          <OrderCard product={order.product} price={order.price} quantity={order.quantity}></OrderCard>
+          <OrderCard 
+          key={order.product}
+          product={order.product}
+          price={order.price}
+          quantity={order.quantity}
+          updateTotal={updateTotal}></OrderCard>
         )
         )}
         
       </div>
 
-      <CheckoutButton total="TODO"></CheckoutButton>
+      <CheckoutButton total= {total}></CheckoutButton>
     </>
   );
 }
